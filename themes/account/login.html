@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block css %}
+<style>
+
+</style>
+{% endblock%}
+<!-- 正文 -->
+{% block content %}
+
+<div class="row-fluid">
+    <div class="article">
+        <form action="/account/login/" method="post">{% csrf_token %}
+       {{form.as_table}}
+
+        <p><span class="small">忘记密码？</span>&nbsp;&nbsp;<span class="small"><a href="/account/register/">向管理猿申请注册</a></span></p>
+         <input type="submit" class="btn" value="登 录">
+        </form>
+    </div>
+
+ </div><!--/最近博客-->
+ 
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+// 初始化
+$(function($){
+
+})
+
+</script>
+{% endblock %}

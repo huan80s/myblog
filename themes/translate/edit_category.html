@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block css %}
+<style>
+<!--
+
+-->
+</style>
+{% endblock%}
+<!-- 正文 -->
+{% block content %}
+<div class="row-fluid">
+<form action="/translate/edit_category/{{ id }}/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p><input type="submit" value="提 交" class="btn"></p>
+</form>
+</div><!--/-->
+
+{% endblock %}
+
+{% block js %}
+    <script src="/site_media/js/common.js"></script>
+<script type="text/javascript">
+// 初始化
+$(function($){
+
+     
+})
+
+</script>
+{% endblock %}

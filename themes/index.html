@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load markup %}
+
+{% block css %}
+<style>
+<!--
+	.title{font-size:18px;color:#3A87AD;font-weight:bold;}
+	.summary{color:#677481}
+	.info,.extra{color:#999999;font-size:12px;padding:10px 0}
+	.more{float:right;font-weight:bold;}
+	.line{padding:10px 0;border-top:1px dashed #ccc;}
+	.tt{font-size:16px;}
+-->
+</style>
+{% endblock%}
+<!-- 正文 -->
+{% block content %}
+<div class='row-fluid' style='height:430px;'>
+    <div id="myCarousel" class="carousel slide">
+    <ol class="carousel-indicators">
+    {% if carousels %}
+	    {% for obj in carousels %}
+		    {% if forloop.first %}
+		    	 <li data-target="#myCarousel" data-slide-to="{{forloop.counter|add:'-1'}}" class="active"></li>
+		    {% else %}
+		    	<li data-target="#myCarousel" data-slide-to="{{forloop.counter|add:'-1'}}"></li>
+		    {% endif %}
+	    {% endfor %}
+    {% else %}
+	    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+	    <li data-target="#myCarousel" data-slide-to="1"></li>
+	    <li data-target="#myCarousel" data-slide-to="2"></li>
+    {% endif %}
+    </ol>
+    <!-- Carousel items -->
+    <div class="carousel-inner">
+    {% for obj in carousels %}
+    {% if forloop.first %}<div class="active item">{% else %}<div class="item">{% endif %}
+    	<div class="hero-unit clr" style='background: {{obj.html_bk_color}} url({{obj.html_bk_img}}) no-repeat fixed center; '>
+    		{% if obj.pic %}
+    		<span class='span5'><a class="thumbnail" href="#"><img src="/upload_media/{{obj.pic}}"></a></span><!-- /img -->
+    		<span class='span7'>
+	    		<h2><a href="#">{{obj.title}}</a></h2>
+	            <p>{{obj.des}}</p>
+	            <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+    		</span><!-- /content -->
+    		{% else %}
+    			<h1>{{obj.title}}</h1>
+	            <p>{{obj.des}}</p>
+	            <p><a href="{{obj.link}}" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+    		{% endif %}
+    		
+		</div>
+    </div><!-- /轮播1 -->
+    </div>
+    <!-- Carousel nav -->
+    <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+    <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+    </div>
+    {% empty %}
+        <div>暂无数据</div>
+    {% endfor %}
+
+</div><!-- /专题轮播 -->
+          
+        
+<div class="row-fluid">
+<div class="span6"><!-- 推荐博客 -->
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+         <li class="active"><a href="#tab1" data-toggle="tab"><img src="/site_media/images/hot.jpg/">   </a></li>
+
+        </ul>
+    <div class="tab-content">
+         <div class="tab-pane active " id="tab1">
+            {% if topBlog %}
+                <ul class="unstyled">
+                {% for obj in topBlog %}
+                 <li><span class="badge badge-info">{{ forloop.counter }}</span>&nbsp;<a class="muted" href="#">{{ obj.title }}<span style="float: right">{{obj.add_time|date:'Y-m-d/ H:i:s'}}</span></a></li>
+                {% endfor %}
+                </ul>
+            {% else %}
+
+                暂无推荐，随便逛逛吧。
+            {% endif %}
+
+         </div>
+  		</div>
+	</div>
+  </div><!-- /推荐博客 -->
+
+   <div class="span6">
+        <div class="tabbable"> <!-- Only required for left/right tabs -->
+			<ul class="nav nav-tabs">
+			 <li class="active"><a href="#tab1" data-toggle="tab">业界资讯</a></li>
+			 <li><a href="#tab2" data-toggle="tab">技术大牛</a></li>
+			 <li><a href="#tab3" data-toggle="tab">产品理念</a></li>
+			 <li><a href="#tab4" data-toggle="tab">互联网的那些事</a></li>
+			 <li><a href="#tab5" data-toggle="tab">创业</a></li>
+			</ul>
+		<div class="tab-content">
+			 <div class="tab-pane active " id="tab1">
+			 	<p>关于业界资讯的一些爬虫抓取的数据。供自己学习参考</p>
+			 </div><!-- /业界资讯 -->
+			<div class="tab-pane" id="tab2">
+				<p>主要是关于技术的学习，抓取大牛们的博客。</p>
+			</div><!-- /技术大牛 -->
+			 <div class="tab-pane" id="tab3">
+				<p>互联网产品的设计。</p>
+			</div><!-- /产品理念 -->
+			 <div class="tab-pane" id="tab4">
+				<p>互联网的那些奇闻异事。</p>
+			</div><!-- /互联网的那些事 -->
+			<div class="tab-pane" id="tab5">
+				<p>互联网创业是唯一一个不需要拼爹却能取得颠覆性效果的途径。</p>
+			</div><!-- /创业 -->
+  		</div>
+	</div>
+  </div><!--/span(爬虫抓取数据)-->
+
+
+ </div><!--/两栏-->
+ 
+{% if blog_list %}
+<div class="alert alert-error"><b class='tt'>最新博客</b><span style='font-size:12px;'>/(最近一周更新)</span></div>
+   	{% for obj in blog_list %}
+   <div class="row-fluid">
+   <div class="span12">
+   		<span class='span3'><a class="thumbnail" href="/blog/article/{{ obj.blog.id }}/"><img src="{{ obj.picUrl }}" alt="{{ obj.blog.title }}"></a></span>
+   		<span class='span9'>
+   		<p class='title'><a href="/blog/article/{{ obj.blog.id }}/">{{obj.blog.title}}</a></p>
+   		<p class='info'>
+   			<span><i class="icon-user"></i>{% if obj.blog.user %}{{obj.blog.user.nickname}}{% else %}BeginMan{% endif %}</span>|
+   			<span><a href="" target="_blank"><i class="icon-map-marker"></i>{{obj.category.title}}</a></span>|
+   			<span>{{obj.blog.add_time|date:'Y-m-d/ H:i:s'}}</span>
+   		</p>
+     	<div class="b_summ">{{obj.blog.summary|safe}} </div>
+     	<p class='extra'>
+     		<span><i class='icon-signal'></i>&nbsp;{{obj.blog.hit}}次围观</span>&nbsp;
+     		<span><i class='icon-eye-open'></i>&nbsp;{{obj.blog.comments}}条吐槽</span>&nbsp;
+
+     		{% if obj.tags %}
+            <span><i class='icon-tags'></i>
+     			{% for i in obj.tags %}<a href=''><span class="label label-info">{{i}}</span></a>&nbsp;{% endfor %}
+     		</span>
+            {% endif %}
+
+     		<span class='more'><a href="/blog/article/{{ obj.blog.id }}/">继续阅读 »</a></span>
+     	</p>
+     	
+     </span>
+       </div><!--/span-->
+ </div><!--/最近博客-->
+ <p class='line'></p>
+   	{% endfor %}
+<p><a href="/blog/"><button class="btn btn-large btn-block btn-primary" type="button">查 看 更 多</button></a></p>
+ {% endif %}
+{% endblock %}

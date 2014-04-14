@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block css %}
+<style>
+<!--
+.c_box{width: 200px; float: left; margin:0 15px 15px 0; height: 150px; background-color: #F7F7F9}
+.thumbnail.c_box.on{background-color: #ffffcc}
+-->
+</style>
+{% endblock%}
+<!-- 正文 -->
+{% block content %}
+<div class="row-fluid">
+
+<div class="hero-unit" style="padding: 20px">
+  <p>翻译：技术型翻译和非技术型翻译，旨在从国外文章中学习。</p>
+  {% if user.is_superuser %}
+  <p><a class="btn btn-primary" onclick="creatSort()">创建分类</a></p>
+  {% endif %}
+</div>
+
+<div class='row-fluid'>
+{% for obj in t_category %}
+    <div class="thumbnail c_box">
+      <div class="caption">
+        <b><a href="/translate/cate_index/{{ obj.id }}/">{{ obj.title }}</a></b>
+        <p class="small">{{ obj.summary|default:'暂无介绍' }}</p>
+        <p class="small"><span>{{ obj.count }}篇文章&nbsp;&nbsp;</span><span>创建于：{{ obj.add_time|date:'Y-m-d' }}</span></p>
+        {% if user.is_superuser %}
+          <p class="small" style="text-align: right"><a href="/translate/edit_category/{{ obj.id }}/">编辑</a>&nbsp;&nbsp;<a href="javascript:;" onclick="del({{ obk.id }})">删除</a></p>
+        {% endif %}
+      </div>
+    </div>
+{% endfor %}
+</div>
+</div><!--/-->
+    <!--添加分类-->
+    <div id="add_sort" style="display: none">
+        <p>分类名称：<input type="text" id="title" name="title"></p>
+        <p>分类简述：<textarea id="summary" name="summary"></textarea></p>
+        <p>分类排序：<input type='text' id='sequence' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" style='width:30px;'/></p>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="/site_media/js/common.js"></script>
+    <script type="text/javascript" src="/site_media/plugins/artDialog4.1.6/jquery.artDialog.source.js?skin=black"></script>
+<script type="text/javascript">
+// 初始化
+$(function($){
+    $('.c_box').mouseover(function(){
+        $(this).attr('class','thumbnail c_box on');
+    });
+     $('.c_box').mouseout(function(){
+        $(this).attr('class','thumbnail c_box');
+    })
+     
+})
+// 删除
+function del(id){
+    var url = '/translate/del_category/';
+    data = {'id':id};
+    if(confirm('是否删除该分类及该分类下所有子分类及所有文章?')){
+        comPost(url,data,'删除');
+        location.href='.';
+    }
+
+}
+// 创建分类
+function creatSort(){
+    art.dialog({
+        title:'添加分类',
+        content:document.getElementById('add_sort'),
+        ok:function(){
+            var url = '/translate/add_category/';
+            var title = del_blank($('#title').val());
+            var summary = del_blank($('#summary').val());
+            var sequence = $('#sequence').val();
+            if(title == ''){
+                alert('分类名称不能为空')
+            }else{
+                $.post(url,{'title':title,'sequence':sequence,'summary':summary},function(data){
+                    if(data == '2'){
+                        alert('该分类已经存在！')
+                    }else if(data == '1'){
+                        alert('创建成功！')
+                        location.href='.';
+                    }else{
+                        alert('创建失败');
+                    }
+                })
+            }
+        },
+        okVal:'创建',
+        cancelVal:'取消',
+        cancel:true
+    })
+}
+
+</script>
+{% endblock %}

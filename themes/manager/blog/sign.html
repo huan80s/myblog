@@ -1,0 +1,71 @@
+{% extends "manager/base.html" %}
+{% load markup %}
+{% block title %}签名{% endblock %}
+{% block css %}
+     <link href="/site_media/wmd/wmd.css/" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="span6">
+    <form method="post" action="/manager/blog/sign/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" value="" id="type" name="type">
+        {{ form.as_table }}
+        <p><input type="submit" class="btn" value="提 交"></p>
+    </form>
+</div>
+<div class="span6">
+    {% for obj in signs %}
+        <div class="span12 alert">
+        <p>
+            <span class="label label-warning">{{ forloop.counter }}</span>
+            {% if obj.is_active == 1 %}   {# 有效 #}
+            <span class="label label-success">有效</span>
+            {% endif %}
+            <span><a href="/manager/blog/sign/?id={{ obj.id }}&type=1">编辑</a> &nbsp;&nbsp;</span>
+            <span><a href="javascript:;" onclick="getPost({{ obj.id }})">删除</a></span>
+        </p>
+        <div class="span12">
+            <span class='span3'>
+                <a class="thumbnail" href="javascript:;">
+                    <img src="{% if obj.pic %}/upload_media/{{ obj.pic }}{% else %}/site_media/images/myself.jpg{% endif %}" alt="{{ obj.title }}"></a>
+                </span>
+            <span class="span9">
+                <b>{{ obj.title }}</b>
+                <p>{{ obj.content|markdown }}</p>
+                <p class="small">{{ obj.add_time|date:'Y-m-d' }}</p>
+            </span>
+        </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+{%block js %}
+<script src="/site_media/wmd/wmd.js"></script>
+<script src="/site_media/wmd/showdown.js"></script>
+<script src="/site_media/js/common.js"></script>
+
+   <script>
+   $(function(){
+       // 清空表单
+        //cleanForm();
+       //页面所有超链接后加随机数
+        addRandom();
+       // 方式：编辑或删除
+       $('#type').attr('value','');
+       {% if type %}
+       if({{ type|default_if_none:'2' }}!='2'){                 //"type|id",后台判断type是编辑还是删除，id表示操作对象
+           $('#type').attr('value',{{ type }}+"|"+{{ id }});
+       }
+       {% endif %}
+
+   })
+   // 删除
+   function getPost(id){
+        if(confirm('是否删除？')){
+            data = comPost('/commons/delete/',{"id":id,'app_label':'blog','model_name':'Sign'},"删除");  // 调用通用post方法
+        }
+   }
+   </script>
+{% endblock %}

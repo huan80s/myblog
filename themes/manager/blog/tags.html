@@ -1,0 +1,126 @@
+{% extends "manager/base.html" %}
+{% block title %}标签管理{% endblock %}
+{% block css %}
+<style>
+<!--
+	.tag{margin-right:100px;}
+	.control,.make{display:none}
+-->
+</style>
+{% endblock %}
+<!-- 正文 -->
+{% block content %}
+<div class='span4'>
+	<p>添加标签</p>
+	<div class="well">
+	    <input type="text" class="input-medium search-query" id='name' placeholder="标签名称">
+	    <button type="submit" class="btn" onclick="Create(0)">添 加</button><input type='hidden' value="0" id='type'>
+    </div>
+</div>
+<div class='span8'>
+	<p>标签管理</p>
+	<div class="well">
+	{% if tag_list %}
+	
+		<ul class="inline">
+		{% for obj in tag_list %}
+			<li class='tag'>
+				<span id="n_{{obj.id}}">
+					<input type="text" id='hide_{{obj.id}}' value="{{obj.name}}" class="input-medium search-query" style="display:none;width:80px;"/>
+					<a href='javascript:;' id='a_{{obj.id}}' class='a_name'>{{obj.name}}({{obj.count|default:"0"}})</a>
+				</span>&nbsp;&nbsp;
+				<span class='control' id="control_{{obj.id}}">
+					<i class="icon-pencil" onclick='edit({{obj.id}},this)' title='编辑' style="cursor:pointer"></i>&nbsp;&nbsp;
+					<i class="icon-remove" onclick='del({{obj.id}},this)' title='删除' style="cursor:pointer"></i>
+				</span>
+				<span class='make' id="make_{{obj.id}}">
+					<button type="submit" class="btn" onclick="Create({{obj.id}})">确定</button>&nbsp;
+					<button type="submit" class="btn" onclick="cancel()">取消</button>
+				</span>
+			</li>
+			
+		{% endfor %}
+		</ul>
+	
+	{% else %}
+	暂无标签
+	{% endif %}
+    </div>
+</div>
+<p>标签云:</p>
+{% for obj in cloud %}
+	<span style="font-size:{{obj.size}}px;color:{{obj.rgb}}">{{obj.name}}&nbsp;</span>
+{% endfor %}
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+<!--
+	// 初始化
+	$(function(){
+		$('#type').attr('value','0');
+		$('.tag').each(function(){
+			$(this).mouseover(function(){
+				if($(this).children('.make:visible').length<1){
+					$(this).children('.control').show();
+				}
+				
+			})
+			$(this).mouseout(function(){
+				if($(this).children('.make:visible').length<1){
+					$(this).children('.control').hide();
+				}
+				
+			})
+		})
+	})
+	
+	// 点击编辑按钮将信息添加到表单中
+	function edit(id){
+		$("input[id*='hide_']").hide()
+		$('.make').hide();
+		$('.a_name').show();
+		var name = $('#n_'+id).children('a').text();
+		$('#type').val(2);
+		$('#a_'+id).hide();
+		$('#hide_'+id).show();
+		$('#make_'+id).show();
+		$('#control_'+id).hide();
+		
+}
+	// 操作
+function Create(id){
+	var url = '/manager/blog/tags/';
+	var id = id;
+	var type = $('#type').val();		// 0 create;1:del;2:edit
+	var name = $('#name').val();		
+	if(name == '' && id == 0){
+		alert('请添加标签名称');
+		return false;
+	}
+	if(type == '2'){
+		name = $('#hide_'+id).val();
+	}
+	data = {'name':name,'type':type,'id':id};
+	$.post(url,data,function(data){
+		if(data == '1'){
+			alert('操作成功');
+			location.href='.';
+		}else if(data == '0'){
+			alert('该标签已存在，请创建其他');
+		}
+	})					
+}
+	
+// 删除
+function del(id){
+	if(confirm('是否删除该标签')){
+		$('#type').val(1);
+		Create(id);
+	}
+}
+//-->
+</script>
+{% endblock %}
+
+

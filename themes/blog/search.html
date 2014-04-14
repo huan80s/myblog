@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block css %}
+<style>
+<!--
+
+-->
+</style>
+{% endblock%}
+<!-- 正文 -->
+{% block content %}
+<div class="row-fluid">
+<h4>搜索结果：</h4>
+{% for obj in search_result %}
+<p><a href="/blog/article/{{ obj.id }}/">{{ obj.title }}</a></p>
+{% endfor %}
+<!--分页-->
+<div class="span12" style="text-align: center">
+    <div class="pagination">
+      <ul>
+        {% if result.has_previous %}
+            <li><a href="?search={{ search_text }}&page={{ result.previous_page_number }}">上一页</a></li>
+        {% endif %}
+
+        {% for page in result.paginator.page_range_ext %}
+            {% if page == result.number %}
+                <li class="disabled"><a href="javascript:;">{{ page }}</a></li>
+            {% else %}
+                <li><a href="?search={{ search_text }}&page={{ page }}">{{ page }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if result.has_next %}
+        <li><a href="?search={{ search_text }}&page={{result.next_page_number }}">下一页</a></li>
+        {% endif %}
+      </ul>
+    </div>
+</div><!--/分页-->
+</div><!--/-->
+{% endblock %}
+
+{% block js %}
+    <script src="/site_media/js/common.js"></script>
+<script type="text/javascript">
+// 初始化
+$(function($){
+
+     
+})
+
+</script>
+{% endblock %}

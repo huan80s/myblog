@@ -1,0 +1,62 @@
+{% for obj in blog_list %}
+<div class="row-fluid">
+<div class="span12">
+<div class="blog-summary">
+            <div class="statscontainer">
+                <div class="stats">
+                    <div class="vote">
+                        <div class="votes">
+                            <span class="vote-count-post"><strong><span style="font-size: 20px;">{{ obj.blog.goods }}</span></strong></span>
+                            <div class="viewcount">推荐</div>
+                        </div>
+                        <div class="status answered"><strong>{{ obj.blog.comments }}</strong> 评论</div>
+                    </div>
+                </div>
+                <div title="{{ obj.blog.hit }} 阅读" class="views supernova">{{ obj.blog.hit }} 阅读</div>
+     		</div><!--/左边信息-->
+
+            <div class="summary">
+                <h3><a href="/blog/article/{{ obj.blog.id }}/" class="question-hyperlink">{{ obj.blog.title }}</a></h3>
+                <div class="excerpt">
+			        {{ obj.blog.summary }}
+                 </div>
+                {% if obj.tags %}
+                <div class="tags t-books t-free t-ebook t-creative-commons">
+                    {% for i in obj.tags %}<a tagid="1596" href="#" class="post-tag">{{ i }}</a>{% endfor %}
+                </div><!--标签-->
+                {% endif %}
+
+                <div class="started">
+                    <span><a href="" target="_blank"><i class="icon-map-marker"></i>{{obj.category.title}}</a></span>&nbsp;&nbsp;
+                    发表于 {{obj.blog.add_time|date:'Y-m-d/ H:i:s'}}&nbsp;&nbsp;&nbsp;
+                    {% if user.is_superuser %}<a href="/manager/blog/add_blog/?id={{ obj.blog.id }}" class="show-user-card">编辑</a>{% endif %}
+                </div><!--/用户信息-->
+
+            </div><!--/summary-->
+    </div><!--/blog-summary-->
+       </div><!--/span-->
+ </div><!--/最近博客-->
+ 	{% endfor %}
+
+<!--分页-->
+<div class="span12" style="text-align: center">
+    <div class="pagination">
+      <ul>
+        {% if new_blogs.has_previous %}
+            <li><a href="javascript:;" onclick='search_({{ new_blogs.previous_page_number }})'>上一页</a></li>
+        {% endif %}
+
+        {% for page in new_blogs.paginator.page_range_ext %}
+            {% if page == new_blogs.number %}
+                <li class="disabled"><a href="javascript:;">{{ page }}</a></li>
+            {% else %}
+                <li><a href="javascript:;" onclick="search_({{ page }})">{{ page }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if new_blogs.has_next %}
+        <li><a href="javascript:;" onclick="search_({{ new_blogs.next_page_number }})">下一页</a></li>
+        {% endif %}
+      </ul>
+    </div>
+</div><!--/分页-->

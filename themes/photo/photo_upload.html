@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block css %}
+    <link href="/site_media/uploadify/uploadify.css/" rel="stylesheet">
+ <link href="/site_media/plugins/tag-it/jquery.tagit.css/" rel="stylesheet">
+<style>
+<!--
+.c_box{width: 200px; float: left; margin:0 15px 15px 0; height: 150px; background-color: #F7F7F9}
+-->
+</style>
+{% endblock%}
+<!-- 正文 -->
+{% block content %}
+<div class="row-fluid">
+<div class="well">
+    <p>上传到：
+        <select id="cate">
+            {% for obj in cates %}
+                <option value="{{ obj.id }}">{{ obj.title }}&nbsp;[{{ obj.get_is_show_display }}]</option>
+            {% endfor %}
+        </select>
+    </p>
+<div class="controls" id="pic_uploadify">
+                 <p>
+                     <input type="file" name="file_upload" id="file_upload" />
+                     <a href="javascript:$('#file_upload').uploadify('upload','*')">上传图片</a>
+                    <a href="javascript:$('#file_upload').uploadify('cancel')">取消上传</a>
+                  </p>
+                <div id="file_uploadQueue" class="uploadifyQueue"></div>
+            </div>
+</div>
+<div class="span12" id="picView" style="display: none">
+
+</div><!--/缩略图-->
+<p style="text-align: right"><a href="javascirpt:;" onclick="addPhoto()" class="btn btn-large  btn-info">提 交</a>&nbsp;&nbsp;<a href="javascirpt:;" onclick="addPhoto()" class="btn">取 消</a></p>
+</div><!--/-->
+{% endblock %}
+
+{% block js %}
+    <script src="/site_media/js/common.js"></script>
+    <script src="/site_media/uploadify/jquery.uploadify.min.js"></script>
+<script type="text/javascript">
+// 初始化
+$(document).ready(function() {
+     //Uploadify 文档地址：http://www.uploadify.com/documentation/
+    $('#file_upload').uploadify({
+        'swf'           : '/site_media/uploadify/uploadify.swf',
+        'auto'          :false,
+        'buttonText'    :'图片上传',                                        //更改文字
+        'uploader'      :'/photo/upload/',                                  // 图片上传处理
+        'fileObjName'   :'photo',                                         //文件名称，后台使用request.FILES['photo']获取文件对象
+        'fileSize'      :'200KB',                                           //文件大小限制
+        'fileTypeExts'  :'*.jpg;*.png;',                                    //图片类型限制
+        'formData'      :{'type':3},                                        //额外参数的传递，这里我需要类型，如1代表博客图片，2代表轮播图片
+        'removeCompleted':false,                                            //将使上传队列中的项目始终显示于队列中，直到点击了关闭按钮或者队列被清空
+        'onFallback'     :function(){                                       // flash检测
+            alert('未检测到兼容版本的Flash.');
+        },
+        'onUploadSuccess':  function(file,data,response){                   //file文件对象；data:返回的数据；reponse:true或false
+            if(response){
+                $('#picView').show();
+                var pic_id = data.split(':')[0];        // 图片id
+                var pic_url = data.split(':')[1];       // 图片路径
+                var html = " \
+                    <div class='thumbnail c_box' type='"+pic_id+"'>\
+                    <p><img src='/site_media/images/close.gif' onclick='delete_pic("+pic_id+")' style='float: right'>\
+                    <img src='/upload_media/"+pic_url+"'  class='picShow' onclick='showPic("+pic_id+")'></p>\
+                    </div>"
+                $('#picView').append(html);
+            }else{
+                alert('上传失败');
+            }
+        }
+
+    });
+
+})
+// 删除图片
+function delete_pic(id){
+    if(confirm('是否删除该图')){
+        var url = '/photo/del_pic/';
+        $.post(url,{'pic_id':id},function(data){
+            if(data == 'ok'){
+                alert('删除成功');
+                $('div[type="'+id+'"]').remove();
+            }else{
+                alert('删除失败');
+            }
+        })
+    }
+}
+// 添加到相册
+function addPhoto(){
+    if($('.thumbnail.c_box').length < 1){
+        alert('请上传图片');
+        return false;
+    }else{
+        var pic_id = '';
+        $('.thumbnail.c_box').each(function(){
+            pic_id+=$(this).attr('type')+';';
+        })
+        var c_id = $('#cate').val();
+        var url = '/photo/photo_upload/';
+        $.post(url,{'c_id':c_id, 'pic_id':pic_id}, function(data){
+            if(data == 'ok'){
+                //alert('上传成功');
+                //location.href='';
+            }else{
+                alert('上传失败');
+            }
+        })
+
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load markup %}
+{% block css %}
+    <link href="/site_media/css/bloglist.css" rel="stylesheet">
+    <link href="/site_media/css/pygments-css-master/borland.css" rel="stylesheet">
+
+<style>
+<!--
+	.title{font-size:18px;color:#3A87AD;font-weight:bold;}
+	.summary{color:#677481}
+	.info,.extra{color:#999999;font-size:12px;padding:10px 0}
+	.more{float:right;font-weight:bold;}
+	.line{padding:10px 0;border-top:1px dashed #ccc;}
+	.tt{font-size:16px;}
+    .article{
+    background-color: #FFFFFF;
+    border-radius: 4px;
+    box-shadow: 0 0 5px #C2C2C2;
+    margin-bottom: 30px;
+    min-height: 20px;
+    padding: 19px;
+    }
+    .read{width: 100px;float: right}
+-->
+</style>
+{% endblock%}
+<!-- 正文 -->
+{% block content %}
+
+<div class="row-fluid">
+ <div>
+    <p class="read"><button id="fullRead" class="btn btn-info" title="阅读模式" onclick="fullRead()"><i class="icon-fullscreen icon-white"></i></button>&nbsp;&nbsp;
+                    <button id="comRead" class="btn btn-info" title="网页模式" onclick="comRead()" style="display: none"><i class="icon-tasks icon-white"></i></button>
+    </p>
+    <h1 style="color: #0088CC;border-left:8px solid #eee; padding-left: 10px;">{{ blog.title }}</h1>
+     <p class="info" style="text-align: right">作者：BeginMan&nbsp;&nbsp;分类：{{ blog.category_id.title }}&nbsp;&nbsp;诞生时间：{{ blog.add_time|date:'Y-m-d/ H:i:s' }}</p>
+    <p class="line"></p>
+    {{ blog.content_show|markdown:'codehilite'}}
+ </div><!--文章/-->
+<p>{% if pre %}<a href="/blog/article/{{ pre }}/"><span class="label label-info"><i class="icon-arrow-left icon-white"></i>&nbsp;上一篇：{{ title_pre }}</span></a>{% endif %}
+   {% if next %}<a href="/blog/article/{{ next }}/" style="float: right"><span class="label label-info"><i class="icon-arrow-right icon-white"></i>&nbsp;下一篇：{{ title_next }}</span></a>{% endif %}
+</p>
+<div id="com_info"><!--公共信息-->
+
+</div>
+ <div class="alert alert-info span12" style="margin-left: 0">
+    <div class="span1"><a class="thumbnail" href="#"><img src="{% if sign.pic %}/upload_media/{{ obj.pic }}{% else %}/site_media/images/myself.jpg{% endif %}" ></a></div>
+    <div class="span11">{{ sign.content|markdown:'codehilite' }}</div>
+</div><!--签名/-->
+
+<div class="comment">
+</div>
+ </div><!--/最近博客-->
+
+ 
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/button.js#style=-1&amp;uuid=&amp;pophcol=2&amp;lang=zh"></script>
+    <script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+    <script src="/site_media/js/common.js"></script>
+<script type="text/javascript">
+// 初始化
+$(function($){
+    jsonData = {'id':{{blog.id}}, 'app_label':'blog','model':'blog','type':-1};
+    sharp_and_opera(jsonData,'com_info');   // 调用显示的公共方法
+     
+})
+
+// 阅读方式
+function fullRead(){
+    $('#blog_info,#fullRead').hide(400);
+    $('#blog_content').attr('class','span12');
+    $('#comRead').show();
+}
+function comRead(){
+    $('#blog_info,#fullRead').show(400);
+    $('#blog_content').attr('class','span9');
+    $('#comRead').hide();
+
+}
+</script>
+{% endblock %}

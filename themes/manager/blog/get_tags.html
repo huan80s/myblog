@@ -1,0 +1,9 @@
+{% if tag_list %}
+<ul>
+	{% for obj in tag_list %}
+	<li><a href="javascript:;" onclick="getIt(this,{{obj.id}})">{{obj.name}}</a></li>
+	{% endfor %}
+</ul>
+{% else %}
+<p>暂无数据</p>
+{% endif %}

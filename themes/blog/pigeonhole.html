@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block css %}
+<style>
+<!--
+
+-->
+</style>
+{% endblock%}
+<!-- 正文 -->
+{% block content %}
+<div class="row-fluid">
+<h4>归档：</h4>
+{% for obj in blogs %}
+    <p><a href="/blog/article/{{ obj.id }}/">{{ obj.title }}</a><span class="small" style="float: right">{{ obj.year }}-{{ obj.month }}</span></p>
+{% endfor %}
+{{ dd }}
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+// 初始化
+$(function($){
+
+     
+})
+
+</script>
+{% endblock %}

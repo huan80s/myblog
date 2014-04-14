@@ -1,0 +1,35 @@
+{% extends "manager/base.html" %}
+{% block title %}后台{% endblock %}
+{% block content %}
+<div class="span12">
+<p>昵称：<input type="text" id="nickname" name="nickname" value="{% if user.nickname %}{{ user.nickname }}{% endif %}"></p>
+<button class="btn" onclick="update()">修 改</button>
+</div>
+
+{% endblock %}
+{%block js %}
+   <script>
+   $(function(){
+       // 初始化
+   })
+   // 修改昵称
+   function update(){
+       var url = '/account/user/update_nickname/'
+       nickname = $('#nickname').val();
+       if (nickname == ''){
+           alert('昵称忘写啦……')
+           return false;
+       }
+       $.post(url,{'nickname':nickname},function(data){
+           if(data == '0'){
+               alert('名字已占用')
+           }else if(data == '1'){
+               alert('修改成功');
+               location.href='/account/user/{{ user.id }}/';
+           }else{
+               alert('操作失败');
+           }
+       })
+   }
+   </script>
+{% endblock %}

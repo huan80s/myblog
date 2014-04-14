@@ -1,0 +1,20 @@
+{% extends "manager/base.html" %}
+{% block title %}后台{% endblock %}
+{% block content %}
+<div class="span12">
+<form method="post" action="/account/user/update_pwd/">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p><input type="submit" value="提 交" class="btn"></p>
+</form>
+</div>
+
+{% endblock %}
+{%block js %}
+   <script>
+   $(function(){
+       // 初始化
+   })
+
+   </script>
+{% endblock %}

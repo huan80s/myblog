@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><!-- HTML5文档类型 -->
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title%}BeginMan的博客{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- 启用响应式特性 -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<link href='/site_media/bootstrap/css/bootstrap.css/' rel="stylesheet">
+	<link href='/site_media/bootstrap/css/bootstrap-responsive.css/' rel="stylesheet">
+	<link href="/site_media/css/common.css/" rel="stylesheet">
+    <link href="/site_media/css/bloglist.css" rel="stylesheet">
+
+    {% block extracss %}{% endblock %}
+	{% block css %}{% endblock %}
+	<script type="text/javascript" src="/site_media/js/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="/site_media/js/common.js"></script>
+	<script type="text/javascript" src="/site_media/js/teamoa.sso.js"></script>
+  	<script type="text/javascript" src="/site_media/plugins/artDialog4.1.6/jquery.artDialog.source.js?skin=black"></script>
+	<script type="text/javascript" src="/site_media/bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript">
+	
+	
+	</script>
+	{% block plugins %}{%endblock%}
+
+  </head>
+
+<body>
+	<!--头部开始-->
+	{% block header %}
+		{% include 'common/header.html' %}
+	{% endblock %}
+	<!--头部结束-->
+
+	<!-- Container -->
+<div class="container-fluid">
+      <div class="row-fluid">
+		<div class="span9" id="blog_content">
+			<!-- 正文 -->
+			<div class="article">{% block content %}{% endblock %}</div>
+		</div>
+
+		<div class="span3" id="blog_info">
+		<!-- 右侧栏 -->
+		{% block rightsidebar %}{% include 'common/sidebar.html'%}{% endblock %}
+		<!-- 右侧栏结束 -->
+		</div>
+	</div>
+</div>
+{% block footer %} {% include 'common/_footer.html' %} {% endblock %}
+	
+	{% block extrajs %}{% endblock %}
+	{% block js %}{% endblock %}
+
+  
+</body>
+</html>

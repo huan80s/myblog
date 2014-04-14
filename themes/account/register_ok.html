@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block css %}
+<style>
+
+</style>
+{% endblock%}
+<!-- 正文 -->
+{% block content %}
+
+<div class="row-fluid">
+    <div class="article">
+        {% if type == '1' %}
+            <div class="alert alert-success"><b>Hi.My friend!</b>欢迎你融入这个博客，我将和你一起讨论你想讨论的东西……
+                <p><a href="/account/" class="btn btn-large btn-primary">赶紧登录吧！</a></p>
+            </div>
+        {% endif %}
+        {% if type == '2' %}
+            <div class="alert alert-success"><b>Hi.!</b>你已经成为第二个管理员了。
+                <p><a href="/account/" class="btn btn-large btn-primary">赶紧登录吧！</a></p>
+            </div>
+
+        {% endif %}
+        {% if type == '0' %}
+            <div class="alert alert-block"><b>好吧</b>，既然你跟我撇清关系，那么我就要好好审核你这个家伙了，请等待审核的邮件通知吧。
+                <p><a href="/blog/" class="btn btn-primary">去逛逛吧！</a></p>
+            </div>
+        {% endif %}
+    </div>
+
+ </div><!--/最近博客-->
+ 
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+// 初始化
+$(function($){
+
+})
+
+</script>
+{% endblock %}

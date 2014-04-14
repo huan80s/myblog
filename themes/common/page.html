@@ -1,0 +1,24 @@
+<!--分页-->
+<div class="span12" style="text-align: center">
+    <div class="pagination">
+      <ul>
+        {% if page_object.has_previous %}
+            <li><a href="?page={{ page_object.previous_page_number }}">上一页</a></li>
+        {% endif %}
+
+        {% for page in page_object.paginator.page_range_ext %}
+            {% if page == page_object.number %}
+                <li class="disabled"><a href="javascript:;">{{ page }}</a></li>
+            {% else %}
+                <li><a href="?page={{ page }}">{{ page }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_object.has_next %}
+        <li><a href="?page={{ page_object.next_page_number }}">下一页</a></li>
+        {% endif %}
+      </ul>
+    </div>
+</div><!--/分页-->
+
+

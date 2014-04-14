@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"><!-- HTML5文档类型 -->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- 启用响应式特性 -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+      <link href='/site_media/bootstrap/css/bootstrap.css/' rel="stylesheet">
+  </head>
+<body>
+<form method="post" action="" class="form-horizontal">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input value="确定" type="submit" class="btn"/>
+</form>
+
+
+</body>
+<script type="text/javascript" src="/site_media/js/jquery-1.8.0.min.js"></script>
+<script src="/site_media/js/common.js"></script>
+<script type="text/javascript">
+// 初始化
+$(function($){
+    $('#id_summary').attr('style', 'height:100px;');
+
+})
+
+</script>
+

@@ -1,0 +1,40 @@
+<div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header" style='font-size:16px;'>分类目录</li>
+                {% for obj in category %}
+                    <li><a href="/blog/category/{{ obj.id }}/">{{ obj.title }}&nbsp;({{ obj.count }})</a></li>
+                {% endfor %}
+            </ul>
+</div>
+
+<div class="well sidebar-nav">
+           <ul class="nav nav-list">
+              <li class="nav-header"  style='font-size:16px;'>最新文章</li>
+              <li class="divider"></li>
+              {% for obj in newblog %}
+                <li><a href="/blog/article/{{ obj.id }}/">{{ obj.title }}</a></li>
+              {% endfor %}
+            </ul>
+</div>
+<div class="well sidebar-nav">
+                <ul class="nav nav-list">
+              <li class="nav-header" style='font-size:16px;'>热门文章</li>
+              <li class="divider"></li>
+               {% for obj in hotblog %}
+                <li><a href="/blog/article/{{ obj.id }}/">{{ obj.title }}</a></li>
+              {% endfor %}
+
+            </ul>
+</div>
+
+
+<div class="well sidebar-nav">
+                <ul class="nav nav-list">
+              <li class="nav-header" style='font-size:16px;'>标签云</li>
+              <li class="divider"></li>
+         {% for obj in cloud %}
+	<a href="/blog/tag/{{ obj.id }}/"><span style="font-size:{{obj.size}}px;color:{{obj.rgb}}">{{obj.name}}&nbsp;</span></a>
+{% endfor %}
+                </ul>
+
+</div><!--/.well -->

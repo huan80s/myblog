@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load markup %}
+{% block css %}
+    <link href="/site_media/css/bloglist.css" rel="stylesheet">
+<style>
+<!--
+	.title{font-size:18px;color:#3A87AD;font-weight:bold;}
+	.summary{color:#677481}
+	.info,.extra{color:#999999;font-size:12px;padding:10px 0}
+	.more{float:right;font-weight:bold;}
+	.line{padding:10px 0;border-top:1px dashed #ccc;}
+	.tt{font-size:16px;}
+-->
+</style>
+{% endblock%}
+<!-- 正文 -->
+{% block content %}
+
+<div class="row-fluid">
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+         <li class="active"><a href="#tab1" data-toggle="tab"><img src="/site_media/images/hot.jpg/">   </a></li>
+
+        </ul>
+    <div class="tab-content">
+         <div class="tab-pane active " id="tab1">
+            {% if topBlog %}
+                <ul class="unstyled">
+                {% for obj in topBlog %}
+                 <li><span class="badge badge-info">{{ forloop.counter }}</span>&nbsp;<a class="muted" href="#">{{ obj.title }}<span style="float: right">{{obj.add_time|date:'Y-m-d/ H:i:s'}}</span></a></li>
+                {% endfor %}
+                </ul>
+            {% else %}
+
+                暂无推荐，随便逛逛吧。
+            {% endif %}
+         </div>
+  		</div>
+	</div>
+  </div><!-- /推荐博客 -->
+
+
+<div class="alert alert-error"><b class='tt'>最新博客</b><span style='font-size:12px;'>/(最近一周更新)</span></div>
+<div id="blog_list"></div><!--异步加载博客列表-->
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+// 初始化
+    $(function($){
+        search(1);
+    })
+
+function search_(page){
+      search(page);
+}
+function search(page){
+    var url = '/blog/list/'
+    $.post(url,{'page':page},function(data){
+        $('#blog_list').html(data);
+    })
+}
+</script>
+{% endblock %}

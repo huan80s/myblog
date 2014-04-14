@@ -1,0 +1,205 @@
+{% extends "manager/base.html" %}
+{% load markup %}
+{% block title %}标签管理{% endblock %}
+{% block css %}
+ <link href="/site_media/css/pygments-css-master/emacs.css/" rel="stylesheet">
+ <link href="/site_media/wmd/wmd.css/" rel="stylesheet">
+ <link href="/site_media/uploadify/uploadify.css/" rel="stylesheet">
+ <link href="/site_media/plugins/tag-it/jquery.tagit.css/" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+<style>
+<!--
+
+-->
+</style>
+
+{% endblock%}
+<!-- 正文 -->
+{% block content %}
+<form class="form-inline" action="/manager/blog/add_blog/" method="post">
+    <div class="span9">
+        {% csrf_token %}
+        <input type="hidden" name="edit_or_creat" value="">
+        <div class="control-group">
+            {{ form.title.errors|safe }}
+            <label class="control-label" for="id_for_title">标题：</label>
+            <div class="controls">
+               {{ form.title }}
+            </div>
+        </div><!--/ title-->
+        <div class="control-group">
+             {{ form.summary.errors|safe }}
+            <label class="control-label" for="id_for_summary">概要：</label>
+            <div class="controls">
+               {{ form.summary }}
+            </div>
+        </div><!--/ 概要-->
+        <div class="control-group">
+           {{ form.content.errors|safe }}
+            <label class="control-label" for="wmd-input">内容：</label>
+            <div class="controls">
+               {{ form.content }}
+            </div>
+        </div><!--/ 内容-->
+
+    </div>
+    <div class="span3">
+        <div class="well">
+            <p><span class="label label-info">基本设置：</span></p>
+            <label class="control-label" for="id_for_category_id">分类：</label>
+            {{ form.category_id.errors|safe }}
+            <div class="controls">
+               {{ form.category_id }}
+            </div>
+            <label class="control-label" for="id_for_tags">标签：</label><a href="javascript:;" onclick="getTags()"><span class="label">插入标签</span></a>
+            {{ form.tags.errors|safe }}
+            <div class="controls">
+               {{ form.tags }}
+            </div>
+            <ul id="myTags"></ul>
+            <label class="control-label" for="file_upload">上传图片：</label>
+            <div class="controls" id="pic_uploadify">
+                 <p>
+                     <input type="file" name="file_upload" id="file_upload" />
+                     <a href="javascript:$('#file_upload').uploadify('upload')">上传图片</a>
+                    <a href="javascript:$('#file_upload').uploadify('cancel')">取消上传</a>
+                  </p>
+                <div id="file_uploadQueue" class="uploadifyQueue"></div>
+            </div>
+            <div class="thumbnail" id="picView" style="display: none">
+                <p>
+                    <img src="/site_media/images/close.gif" onclick="init_del_pic()" style="float: right">
+                    <input type="hidden" value="0" id="my_pic" name="my_pic">
+                    <img src="" alt="" id="picShow">
+                </p>
+
+            </div><!--/缩略图-->
+    </div>
+    <div class="well">
+         <p><span class="label label-info">高级设置：</span></p>
+        {{ form.status.errors|safe }}
+        <label class="control-label" for="id_for_status">状态：<small class="muted">&nbsp;默认发布</small></label>
+        <div class="controls" id="status">
+           {{ form.status }}
+        </div>
+        <label class="control-label" for="id_for_istop">是否置顶：</label>
+        {{ form.istop.errors|safe }}
+        <div class="controls" id="status">
+           {{ form.istop }}
+        </div>
+        <label class="control-label" for="id_for_cancomment">允许评论：</label>
+       {{ form.cancomment.errors|safe }}
+        <div class="controls" id="status">
+           {{ form.cancomment }}
+        </div>
+        {{ form.password.errors|safe }}
+        <label class="control-label" for="id_for_password">访问密码：</label>
+        <div class="controls" id="status">
+           {{ form.password }}
+        </div>
+
+    </div>
+    <input type="submit" class="btn btn-large btn-primary" value="发 布">
+</form>
+
+
+<div id="insert_url" style="display: none">
+<input type="text" id="urls">
+</div><!--/插入网络图片当作博客缩略图-->
+{% endblock %}
+
+{% block js %}
+<script src="/site_media/wmd/wmd.js"></script>
+<script src="/site_media/wmd/showdown.js"></script>
+<script src="/site_media/uploadify/jquery.uploadify.min.js"></script>
+<script src="/site_media/plugins/tag-it/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="/site_media/plugins/tag-it/tag-it.js"></script>
+<script type="text/javascript">
+<!--
+ $(document).ready(function() {
+     //Uploadify 文档地址：http://www.uploadify.com/documentation/
+    $('#file_upload').uploadify({
+        'swf'           : '/site_media/uploadify/uploadify.swf',
+        'buttonText'    :'图片上传',                                        //更改文字
+        'uploader'      :'/manager/blog/add_pic/',                          // 图片上传处理
+        'debug'         :false,                                              // 调试  turn on the SWFUpload debugging mode.
+        'fileObjName'   :'blogPic',                                         //文件名称，后台使用request.FILES['blogPic']获取文件对象
+        'fileSize'      :'200KB',                                           //文件大小限制
+        'fileTypeExts'  :'*.gif;*.jpg;*.png;*.bmp',                         //图片类型限制
+        'formData'      :{'type':1},                                        //额外参数的传递，这里我需要类型，如1代表博客图片，2代表轮播图片
+        'removeCompleted':false,                                            //将使上传队列中的项目始终显示于队列中，直到点击了关闭按钮或者队列被清空
+        'onFallback'     :function(){                                       // flash检测
+            alert('未检测到兼容版本的Flash.');
+        },
+        'onUploadSuccess':  function(file,data,response){                   //file文件对象；data:返回的数据；reponse:true或false
+            if(response){
+                $('#picView').show();
+                var pic_id = data.split(':')[0];        // 图片id
+                var pic_url = data.split(':')[1];       // 图片路径
+                $('#my_pic').attr('value',pic_id);      // 隐藏域传图片id
+                $('#picShow').attr('src','/upload_media/'+pic_url);//显示缩略图
+            }else{
+                alert('上传失败');
+            }
+        }
+    });
+
+     // 初始化数据
+     $('#id_for_status_0').attr('checked','checked');//状态：发布默认选中
+     $('ul').each(function(){
+         $(this).addClass('unstyled');       // 去掉讨厌的列表黑点
+     });
+     // 初始化标签插件
+     eventTags.tagit({
+     tagLimit:10,       // 标签最长10个字符
+     beforeTagAdded:function(evt, ui){ //在添加标签之前判断添加的标签是否含有“|”
+        var text = eventTags.tagit('tagLabel', ui.tag);
+        if(text.indexOf('|')>0){
+		    alert('标签中不能包括特殊字符“|”');
+            return false;
+	    }
+     },
+     afterTagAdded :function(){ //添加标签之后触发的事件
+         addText();
+     },
+     afterTagRemoved :function(){   // 移除标签之后触发事件
+          addText();
+     },
+     availableTags: [{% for obj in tags %}{% if forloop.last %}"{{ obj.name }}"{% else %}"{{ obj.name }}",{% endif %}{% endfor %}] //自动化完成
+     });
+     // 如果是编辑状态则编辑文章
+     var urlType = window.location.href;
+     if(urlType.split('?')[1]){
+         id = urlType.split('?')[1].split('=')[1];
+         $("input[name='edit_or_creat']").attr('value',id); // 如果是编辑状态则传入后台要编辑的值
+     }
+
+
+});
+
+
+// 加载删除
+function init_del_pic(){
+    pic_id =  $('#my_pic').val();       // 图片id
+    del_pic(pic_id);      //删除图片的方法
+    $('#picView').hide();
+    $('#my_pic').attr('value',0);//隐藏域传图片id=0
+    $('#picShow').attr('src','');//缩略图路径为空
+
+}
+
+var eventTags = $('#id_for_tags');
+
+// 添加标签到隐藏的id_for_tags中
+function addText(){
+    var text = '';
+    $('.tagit-label').each(function(){
+        text+=$(this).text()+'|';
+        eventTags.attr('value',text);
+    })
+}
+
+//-->
+</script>
+{% endblock %}
+

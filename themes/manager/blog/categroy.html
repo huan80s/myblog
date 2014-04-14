@@ -1,0 +1,156 @@
+{% extends "manager/base.html" %}
+<!-- 正文 -->
+{% block title %}分类管理{% endblock %}
+{% block css %}
+<style>
+<!--
+	.sequence{width:30px;}
+	.des{font-size:12px;color:#616D79;margin-left:10px;}
+	.control{float:right;color:#64717E}
+-->
+</style>
+{% endblock %}
+{% block content %}
+<div class='span4'>
+	添加分类</p>
+	<div class="well">
+	    <table>
+	    	<tr><td>父级：</td></tr>
+	    	<tr><td><select id='p_c'><option value='0'>无</option>{% if p_categroes %}{% for obj in p_categroes %}<option value='{{obj.id}}'>{{obj.title}}</option>{% endfor %}{% endif %}</select></td></tr>
+	    	<tr><td>名称：</td></tr>
+	    	<tr><td><input type='text' id='title' /></td></tr>
+	    	<tr><td>简介：</td></tr>
+	    	<tr><td><input type='text' id='des' /></td></tr>
+	    	<tr><td>排序：</td></tr>
+	    	<tr><td><input type='text' id='sequence' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" style='width:30px;'/></td></tr>
+	    </table>
+	    <p><button class='btn' onclick="Do()">添 加</button><input type='hidden' value="0" id='type'></p>
+    </div>
+</div>
+
+
+<div class='span8'>
+	<p>分类操作</p>
+	<div class="well">
+	    {% if categroy_list %}
+	    	{% for obj in categroy_list %}
+	    		<p><span><input type='text' value="{{obj.pc.sequence}}" id="s_{{obj.pc.id}}" class='sequence' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"></span>
+	    			<span><span id="t_{{obj.pc.id}}" type='{{obj.pc.parent_id}}'>{{obj.pc.title}}</span><em class='des'>({% if obj.pc.des %}<span id="des_{{obj.pc.id}}">{{obj.pc.des}}</span>&nbsp;/&nbsp;{% endif %}{{obj.pc.add_time|date:"Y-m-d"}})</em></span>
+	    			<span class='control'><a href='javascript:;' onclick="del({{obj.pc.id}},1)">删除</a> &nbsp;<a href='javascript:;' onclick="edit({{obj.pc.id}})">编辑</a></span>
+	    		</p>
+	    		{% if obj.cc %}
+	    			<div style='padding-left:30px'>
+	    			{% for i in obj.cc %}
+	    				<p><span><input type='text' value="{{i.sequence}}" id="s_{{i.id}}" class='sequence' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"></span>
+	    				<span><span id="t_{{i.id}}" type='{{i.parent_id}}'>{{i.title}}</span><em class='des'>({% if i.des %}<span id="des_{{i.id}}">{{i.des}}</span>&nbsp;/&nbsp;{% endif %}{{i.add_time|date:"Y-m-d"}})</em></span>
+	    				<span class='control'><a href="javascript:;" onclick="del({{i.id}},2)">删除 </a>&nbsp;<a href='javascript:;' onclick="edit({{i.id}})">编辑</a></span>
+	    				</p>
+	    				{% endfor %}
+	    			</div>
+	    		{% endif %}
+	    	{% endfor %}
+	    {% else %}
+	    	暂无数据
+	    {% endif %}
+	    <p><button class='btn' onclick='update()'>更新排序</button></p>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="/site_media/js/manage/nav.js/"></script>
+<script type="text/javascript">
+<!--
+	// 初始化
+	$(function(){
+		controlNav();
+		$('#title,#des,#sequence').val('');
+	})
+	// 删除
+	function del(id,type){
+		var msg = '是否删除该分类？';
+		if(type == 1){
+			var msg = '是否删除该父级以及该父级下所有分类？';
+		}
+		if(confirm(msg)){
+			var url = '/manager/blog/categroy/delete/';
+			$.post(url,{'id':id},function(data){
+				if(data == 'ok'){
+					alert('删除成功')
+					location.href = '.'
+				}else{
+					alert('系统出错');
+				}
+			})
+		}
+		
+}
+	
+	// 点击编辑按钮将信息添加到表单中
+	function edit(id){
+		var title = $('#t_'+id).text();		
+		var des = $('#des_'+id).text();
+		var p_id =$('#t_'+id).attr('type');
+		var sequence =$('#s_'+id).attr('value');
+		$('#title').val(title);
+		$('#des').val(des);
+		$('#sequence').val(sequence);
+		$('#p_c').val(p_id);
+		$('#type').val(id);
+}
+	
+	// 创建、 编辑
+	function Do(){
+		var url = '/manager/blog/categroy/';
+		var i = $('#type').val();
+		var type = 0;		// create
+		if(i != '0'){			// 编辑
+			type = i;
+		}				
+		var p_id = $('#p_c').val();
+		var title = $('#title').val();		
+		var des = $('#des').val();
+		var sequence =$('#sequence').val();
+		if(title == ''){
+			alert('请添加分类名称');
+			return false;
+		}
+		data = {'p_id':p_id,'title':title,'des':des,'sequence':sequence,'type':type};
+		$.post(url,data,function(data){
+			if(data == '1'){
+				alert('操作成功');
+				location.href='.';
+			}else if(data == '0'){
+				alert('该分类已存在，请创建其他');
+			}
+		})					
+
+}
+// 更新排序
+function update(){
+	var ok = true;
+	var sequence = [];
+	$('.sequence').each(function(){
+		var id = $(this).attr('id').split('_')[1];
+		if($(this).attr('value') == ''){
+			alert('排序不能为空');
+			ok =  false;
+		}
+		sequence.push({'id':id,'sequence':$(this).attr('value')});
+	})
+	if (ok){
+		var sequence = JSON.stringify(sequence);	//将 JavaScript 对象转换为字符串
+		var url = '/manager/blog/categroy/update/'
+		$.post(url,{'data':sequence},function(data){
+			if(data == 'ok'){
+				alert('更新成功');
+			}else{
+				alert('系统出错')
+			}
+		})
+	}
+}
+//-->
+</script>
+{% endblock %}
+
+

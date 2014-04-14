@@ -1,0 +1,29 @@
+{% extends "manager/base.html" %}
+{% block title %}修改个人头像{% endblock %}
+{% block content %}
+<div class="span12">
+    <span class="span1">
+        <a href="javascript:;" class="thumbnail"><img src="{{ portrait }}"></a>
+    </span>
+    <span class="span2">
+        <a href="javascript:;" class="thumbnail"><img src="{{ portrait }}"></a>
+    </span>
+    <span class="span9">
+        <form action="/account/user/update_pro/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p class="small">你可以上传JPG、JPEG、GIF、PNG或BMP文件。且图片大小不能超过500Kb</p>
+            {{ form.as_p }}
+            <input type="submit" class="btn" value="上 传">
+        </form>
+    </span>
+</div>
+
+{% endblock %}
+{%block js %}
+   <script>
+   $(function(){
+       // 初始化
+   })
+
+   </script>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% if trans.object_list %}
+<p>共{{ trans.paginator.num_pages}}条数据</p>
+<table class="table table-bordered table-hover">
+    <tr class="info"><th>全选 </th><th>标题</th><th>信息</th><th>操作</th></tr>
+    {% for obj in trans.object_list %}
+    <tr>
+        <td><input type="checkbox" name="c" value="{{ obj.id }}"/></td>
+        <td>{{ obj.title }}</td>
+        <td class="small">{{ obj.hit }}次阅读&nbsp;{{ obj.comments }}条评论&nbsp;发布于：{{ obj.add_time|date:"Y-m-d H:i:s" }}</td>
+        <td><a class="btn btn-mini" href="/translate/add_translate/{{ obj.id }}/"><i class="icon-edit"></i></a>&nbsp;
+            <a class="btn btn-mini" href="javascript:;" onclick="del({{ obj.id }},0)"><i class="icon-remove"></i></a></td>
+    </tr>
+    {% endfor %}
+    <tr><td><button class="btn btn-small" id="all_check">全选</button>&nbsp;<button class="btn btn-small" id="no_check">全不选</button>&nbsp;<button class="btn btn-small" id="smart_check">反选</button> </td><td></td><td></td><td><a class="btn btn-mini" href="javascript:;" onclick="del(0,1)"><i class="icon-remove"></i>批量删除</a></td></tr>
+</table>
+
+
+<div class="span12" style="text-align: center">
+    <div class="pagination">
+      <ul>
+        {% if trans.has_previous %}
+            <li><a href="javascript:;" onclick='search_({{ trans.previous_page_number }})'>Prev</a></li>
+        {% endif %}
+
+        {% for page in trans.paginator.page_range_ext %}
+            {% if page == trans.number %}
+                <li class="disabled"><a href="javascript:;">{{ page }}</a></li>
+            {% else %}
+                <li><a href="javascript:;" onclick="search_({{ page }})">{{ page }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if trans.has_next %}
+        <li><a href="javascript:;" onclick="search_({{ trans.next_page_number }})">Next</a></li>
+        {% endif %}
+      </ul>
+    </div>
+</div><!--/分页-->
+<script>
+    $(function(){
+        // 全选、全不选、反选
+       $('#all_check,#no_check,#smart_check').click(function(){
+           var that = $(this);
+           if(that.attr('id') == 'all_check'){$('[name=c]:checkbox').attr('checked',true)}
+           if(that.attr('id') == 'no_check'){$('[name=c]:checkbox').attr('checked',false)}
+           if(that.attr('id') == 'smart_check'){
+               $('[name=c]:checkbox').each(function(){
+                   this.checked = !this.checked;
+               })
+           }
+       });
+    })
+</script>
+{% else %}
+暂无数据
+{% endif %}
+
+
+

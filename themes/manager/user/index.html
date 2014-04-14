@@ -1,0 +1,28 @@
+{% extends "manager/base.html" %}
+{% block title %}后台{% endblock %}
+{% block content %}
+<div class="span12">
+    <span class='span2'>
+        <a class="thumbnail" href="/account/user/update_pro/"><img src="{{ portrait }}" alt="{% if user.nickname %}{{ user.nickname }}{% else %}没头像，没人爱{% endif %}"></a>
+        <p style="text-align: center"><a class="small" href="/account/user/update_pro/">修改头像</a></p>
+    </span>
+   	<span class='span7'>
+        <p>注册邮箱：{{ user.email }}</p>
+        <p>昵称：{% if user.nickname %}{{ user.nickname }}{% else %}你还没有昵称，感觉起一个吧{% endif %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/account/user/update_nickname/"><span class="small">修改昵称</span></a></p>
+        <p>上次登陆：{{ user.last_login|date:"Y-m-d  h:i:s" }}</p>
+        <p>注册时间：{{ user.date_joined|date:"Y-m-d  h:i:s"}}</p>
+    </span>
+    <span class="span3">
+        <p class="small" style="border-bottom: 1px dashed #eee;margin-bottom: 10px;">分享是一种精神，对于一个程序员，我们最为砥砺的就是讨论与分享，相惜与共识！</p>
+        <p><a href="#" class="btn btn-large btn-primary">推送你喜欢的文章吧</a> </p>
+    </span>
+</div>
+
+{% endblock %}
+{%block js %}
+   <script>
+   $(function(){
+       // 初始化
+   })
+   </script>
+{% endblock %}

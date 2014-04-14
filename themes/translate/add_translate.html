@@ -1,0 +1,39 @@
+{% extends "manager/base.html" %}
+{% load markup %}
+{% block css %}
+ <link href="/site_media/css/pygments-css-master/emacs.css/" rel="stylesheet">
+ <link href="/site_media/wmd/wmd.css/" rel="stylesheet">
+<style>
+<!--
+
+-->
+</style>
+{% endblock%}
+<!-- 正文 -->
+{% block content %}
+<div class="row-fluid">
+<form action="{{ url }}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p><input type="submit" value="提 交" class="btn"></p>
+</form>
+</div><!--/-->
+
+{% endblock %}
+
+{% block js %}
+    <script src="/site_media/wmd/wmd.js"></script>
+    <script src="/site_media/wmd/showdown.js"></script>
+    <script src="/site_media/js/common.js"></script>
+<script type="text/javascript">
+// 初始化
+$(function($){
+    setLabel(); // 平铺label
+    $('#id_progress').after('<span style="font-size:18px;">%</span>');
+    {% if cate_id %}
+        $('#id_category').val({{ cate_id }});
+    {% endif %}
+})
+
+</script>
+{% endblock %}

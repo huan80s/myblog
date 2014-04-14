@@ -1,0 +1,101 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors 仿照图灵社区样式
+ * @date    2014-01-03 17:48:43
+ * 博客列表显示样式
+ */
+ .blog-summary {
+    border-bottom: 1px dashed #AAAAAA;
+    clear: both;
+    display: block;
+    overflow: hidden;
+    padding: 11px 0;
+}
+.statscontainer {
+    float: left;
+    overflow: hidden;
+    text-align: center;
+    width: 70px;
+    font-size: 13px;
+    margin-top: 20px;
+}
+.summary {
+    margin-left: 90px;
+}
+.statscontainer .stats {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border-radius: 4px;
+    margin: 0;
+    text-align: center;
+    padding: 5px;
+}
+.statscontainer .votes {
+    color: #555555;
+}
+.statscontainer .answered {
+    background-color: #0088CC;
+    border-radius: 4px;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 4px 0;
+}
+.statscontainer .votes {
+    color: #555555;
+}
+.stats strong {
+    display: block;
+    font-size: 140%;
+    font-weight: bold;
+}
+.statscontainer strong {
+    display: block;
+    font-size: 140%;
+    font-weight: bold;
+}
+.statscontainer .views {
+    color: #B94A48;
+    padding-top: 4px;
+}
+
+.summary .tags {
+    float: left;
+    width: 450px;
+}
+.post-tag, .post-text .post-tag, #wmd-preview a.post-tag {
+    background-color: #E0EAF1;
+    background-image: url("data:image/gif;base64,R0lGODlhEAAQAIAAAAAAAP///yH5BAEHAAAALAAAAAAQABAAAAIThI+py+0PIwwhUjqvrbL7D4ZHAQA7");
+    background-position: right center;
+    background-repeat: no-repeat;
+    border-bottom: 1px solid #3E6D8E;
+    border-radius: 3px 12px 12px 3px;
+    border-right: 1px solid #7F9FB6;
+    color: #3E6D8E;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 16px;
+    margin: 2px 2px 2px 0;
+    padding: 2px 14px 2px 6px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.post-tag:hover, .post-text .post-tag:hover, .wmd-preview a.post-tag:hover {
+    background-color: #0088CC;
+    border-bottom: 1px solid #37607D;
+    border-right: 1px solid #37607D;
+    color: #E0EAF1;
+    text-decoration: none;
+}
+
+.summary .started {
+    float: right;
+    margin-right: 10px;
+    width: 300px;
+    color: #666666;
+    font-size: 12px;
+    text-align: right;
+}
+
+
+
+

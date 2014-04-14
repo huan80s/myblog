@@ -1,0 +1,53 @@
+{% extends "manager/base.html" %}
+{% block title %}轮播管理{% endblock %}
+{% block css %}
+<link href="/site_media/plugins/ColorPicker/farbtastic.css" rel="stylesheet" type="text/css" />
+<style>
+<!--
+
+-->
+</style>
+{% endblock %}
+<!-- 正文 -->
+{% block content %}
+<div class='span5'>
+<form action="/manager/system/carousel/" method="post" enctype="multipart/form-data" class='form-horizontal'>{% csrf_token %}
+{% include "common/forms.html" %}
+<p><input type="submit" value="发布" class='btn' /></p>
+</form>
+</div>
+<div class='span7'>
+<div class="alert">
+<button type="button" class="close" data-dismiss="alert">&times;</button>
+<strong>通知!</strong> 预览功能稍后退出……
+</div>
+<div id="colorpicker"></div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="/site_media/plugins/ColorPicker/farbtastic.js"></script>
+<script type="text/javascript">
+<!--
+	// 初始化
+	$(function(){
+		$('label').each(function(){$(this).addClass('control-label')});
+		// color pick设置
+		$('#colorpicker').farbtastic('#id_html_bk_color');
+		// 选择链接对象
+		$('#id_link').click(function(){
+			//var url = '/manager/blog/get_tags/';
+			//$.post(url,function(data){
+			//	art.dialog({title:'标签列表',content: data});
+			//})
+			art.dialog({title:'标签列表',content: 'sdasdok'});
+		})
+	})
+	
+
+//-->
+</script>
+{% endblock %}
+
+

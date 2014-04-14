@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block css %}
+<style>
+
+</style>
+{% endblock%}
+<!-- 正文 -->
+{% block content %}
+
+<div class="row-fluid">
+    <div class="article">
+        <form action="/account/register/" method="post">{% csrf_token %}
+       {{form.as_table}}
+         <p><span class="small"><a href="/account/">已有帐号</a></span>&nbsp;&nbsp;<span class="small">往这看：--&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">注册之前，先了解这个博客是否有注册的价值吧！</a></span></p>
+        <p><input type="submit" class="btn" value="注 册"></p>
+        </form>
+    </div>
+
+ </div><!--/最近博客-->
+ 
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+// 初始化
+$(function($){
+
+})
+
+</script>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% if user.is_active %}
+<ul class="nav nav-list" style="background-color: #fff">
+<li class="nav-header">个人信息管理</li>
+<li class="active"><a href="/account/user/{{ user.id }}/">首页</a></li>
+<li><a href="/account/user/update_pwd/">修改密码</a></li>
+<li><a href="/account/user/update_pro/">上传头像</a></li>
+<li><a href="#">推送</a></li>
+</ul>
+    <hr>
+{% endif %}
+{% if user.is_superuser %}
+<ul class="nav nav-list" style="background-color: #fff">
+<li class="nav-header">后台Blog管理</li>
+<li><a href="/manager/" type="0">首页</a></li>
+<li><a href="/manager/blog/categroy/" type="1">类别管理</a></li>
+<li><a href="/manager/blog/tags/" type="2">标签管理</a></li>
+<li><a href="/manager/blog/add_blog/" type="100">写博客</a></li>
+<li><a href="/manager/blog/blog_manage/" type="3">博客管理</a></li>
+<li><a href="/manager/blog/sign/" type="8">博客签名</a></li>
+</ul>
+
+<hr>
+<ul class="nav nav-list" style="background-color: #fff">
+<li class="nav-header">关于我|日志管理</li>
+<li><a href="/about/add/">发布日志</a></li>
+<li><a href="/about/manager/" type="5">日志管理</a></li>
+</ul>
+<hr>
+<ul class="nav nav-list" style="background-color: #fff">
+<li class="nav-header">翻译管理</li>
+<li><a href="/translate/manager/" type="5">管理首页</a></li>
+</ul>
+<hr>
+<ul class="nav nav-list" style="background-color: #fff">
+<li class="nav-header">系统管理</li>
+<li><a href="#">基本设置</a></li>
+<li><a href="#" type="5">留言管理</a></li>
+<li><a href="/manager/system/carousel/">轮播管理</a></li>
+<li><a href="#">个人简历</a></li>
+</ul>
+{% endif %}
